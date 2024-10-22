@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\HomeController;
@@ -38,6 +39,10 @@ Route::get('admin/dashboard',[HomeController::class,'admin']) -> middleware(['au
 Route::resource('service', ServiceController::class)->middleware(['auth', 'verified', 'admin']);
 Route::resource('equipment', EquipmentController::class)->middleware(['auth', 'verified', 'admin']);
 Route::resource('user', UserController::class)->middleware(['auth', 'verified', 'admin']);
+Route::resource('confirmBooking', AdminBookingController::class)->middleware(['auth', 'verified', 'admin']);
+Route::post('/rejectBooking/{id}', [AdminBookingController::class, 'reject'])->name('confirmBooking.reject');
+
+
 
 
 Route::get('staff/dashboard',[HomeController::class,'staff']) -> middleware(['auth','verified','staff']);

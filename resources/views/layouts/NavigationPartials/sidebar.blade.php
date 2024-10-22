@@ -20,6 +20,11 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Users
                 </a>
+                <div class="sb-sidenav-menu-heading">Transactions</div>
+                <a class="nav-link" href="{{route('confirmBooking.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Confirm Bookings
+                </a>
             @endif
             
             @if(Auth::user()->role == 'Customer')

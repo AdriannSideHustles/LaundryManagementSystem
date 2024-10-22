@@ -2,53 +2,50 @@
 @section('content')
 
 <div class="container">
-    <h1>Bookings</h1>
-    <a href="javascript:void(0)" class="btn btn-info ml-3" id="create-new-booking">Book Now!</a>
-    <br><br>
+    <h1>Confirm/Assign Bookings</h1>
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Listed Bookings
+            Pending Bookings
         </div>
         <div class="card-body">
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>Customer Name</th>
                         <th>Service Booked</th>
                         <th>Booking Created Date</th>
                         <th>Scheduled Date</th>
                         <th>Status</th>
                         <th>Staff Assigned</th>
-                        <th>Pickup Schedule</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Customer Name</th>
                         <th>Service Booked</th>
                         <th>Booking Created Date</th>
                         <th>Scheduled Date</th>
                         <th>Status</th>
                         <th>Staff Assigned</th>
-                        <th>Pickup Schedule</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
                 <tbody>
                     @foreach($bookings as $booking)
                     <tr>
+                        <td>{{ $booking->customer ? $booking->customer->name : 'N/A' }}</td>
                         <td>{{ $booking->service->service_name }}</td>
                         <td>{{ $booking->booking_date->format('Y-m-d h:i A') }}</td>
                         <td>{{ $booking->booking_schedule->format('Y-m-d h:i A') }}</td>
                         <td>{{ $booking->transaction_status }}</td>
                         <td>{{ $booking->staff ? $booking->staff->name : 'N/A' }}</td>
-                        <td>{{ $booking->pickup_schedule ? $booking->pickup_schedule->format('Y-m-d h:i A') : 'N/A' }}</td>
                         <td>
-                            <a href="javascript:void(0)" class="btn btn-primary edit-booking" data-id="{{ $booking->id }}">Edit</a>
-                            <form action="{{ route('booking.destroy', $booking->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this booking?');">
+                            <a href="javascript:void(0)" class="btn btn-primary edit-booking" data-id="{{ $booking->id }}">Assign</a>
+                            <form action="{{ route('confirmBooking.reject', $booking->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to Reject this booking?');">                        
                                 @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger">Reject</button>
                             </form>
                         </td>
                     </tr>
@@ -73,20 +70,14 @@
                     <input type="hidden" name="_method" id="method" value="POST">
                     
                     <div class="form-group">
-                        <label for="service_id" class="col-sm-4 control-label">Service</label>
+                        <label for="staff_user_id" class="col-sm-4 control-label">Staff</label>
                         <div class="col-sm-12">
-                            <select class="form-control" id="service_id" name="service_id" required="">
-                                <option value="">Select a service</option>
-                                @foreach($services as $service)
-                                    <option value="{{ $service->id }}">{{ $service->service_name }}</option>
+                            <select class="form-control" id="staff_user_id" name="staff_user_id" required="">
+                                <option value="">Select a Staff</option>
+                                @foreach($staffs as $staff)
+                                    <option value="{{ $staff->id }}">{{ $staff->name }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <label for="scheduled_date" class="form-label">Book Schedule</label>
-                            <input type="datetime-local" class="form-control" id="booking_schedule" name="booking_schedule" required min="{{ now()->subHours(7)->format('Y-m-d\TH:i') }}">
                         </div>
                     </div>
                     <div class="col-sm-offset-2 col-sm-10">
@@ -97,30 +88,28 @@
             <div class="modal-footer"></div>
         </div>
     </div>
-</div>
+</div> 
 
 <script>
     $(document).ready(function() {
         // Show the modal for adding new reward
-        $('#create-new-booking').click(function() {
-            $('#productForm').trigger("reset"); 
-            $('#ajax-product-modal').modal('show'); 
-            $('#productCrudModal').html("Add Booking");
-            $('#btn-save').text('Submit Booking'); 
-            $('#method').val('POST'); 
-            $('#productForm').attr('action', "{{ route('booking.store') }}"); 
-        });
+        // $('#create-new-booking').click(function() {
+        //     $('#productForm').trigger("reset"); 
+        //     $('#ajax-product-modal').modal('show'); 
+        //     $('#productCrudModal').html("Add Booking");
+        //     $('#btn-save').text('Submit Booking'); 
+        //     $('#method').val('POST'); 
+        //     $('#productForm').attr('action', "{{ route('booking.store') }}"); 
+        // });
 
         $('body').on('click', '.edit-booking', function() {
             var booking_id = $(this).data('id');
-            $.get("{{ route('booking.index') }}" + '/' + booking_id + '/edit', function(data) {
+            $.get("{{ route('confirmBooking.index') }}" + '/' + booking_id + '/edit', function(data) {
                 $('#productCrudModal').html("Edit Booking");
                 $('#method').val('PUT'); 
                 $('#booking_id').val(data.id); 
-                $('#service_id').val(data.service_id); 
-                $('#booking_schedule').val(data.booking_schedule); 
-                console.log("Booking Schedule: ", data.booking_schedule); 
-                $('#productForm').attr('action', "{{ route('booking.update', '') }}/" + data.id); 
+                $('#staff_user_id').val(data.staff_user_id); 
+                $('#productForm').attr('action', "{{ route('confirmBooking.update', '') }}/" + data.id); 
                 $('#btn-save').text('Save Changes'); 
                 $('#ajax-product-modal').modal('show'); 
             });
@@ -130,7 +119,7 @@
         $('#productForm').on('submit', function(e) {
             e.preventDefault(); 
             let formData = new FormData(this); 
-
+            
             $.ajax({
                 type: "POST",
                 url: $(this).attr('action'),
@@ -144,6 +133,7 @@
                 error: function(data) {
                     console.log(data);
                 }
+                
             });
         });
     });
