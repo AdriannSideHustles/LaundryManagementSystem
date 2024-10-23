@@ -15,9 +15,20 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->orderBy('created_at', 'desc')->get();
+        $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->whereIn('transaction_status', [1,2,3])->orderBy('created_at', 'desc')->get();
         $services = Service::orderBy('service_name', 'asc')->get();
         return view('customer.booking.index', compact('bookings', 'services'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function rejectedCancelledIndex()
+    {
+        $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->whereIn('transaction_status', [8, 9])->orderBy('created_at', 'desc')->get();
+        return view('customer.booking.cancelledRejected', compact('bookings'));
     }
 
     /**
@@ -112,5 +123,21 @@ class BookingController extends Controller
         $booking->delete();
         return redirect()->route('booking.index')->with('success', 'Booking deleted successfully!');
     }
+/**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Booking  $booking
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel(Request $request, $id)
+    {
+        $booking = Booking::find($id);
+        $booking->update([
+            'transaction_status' => 9,
+        ]);
 
+        return redirect()->route('booking.index');
+        return response()->json(['success' => 'Booking Cancelled successfully.']);
+    }
 }

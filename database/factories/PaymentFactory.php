@@ -19,6 +19,7 @@ class PaymentFactory extends Factory
         return [
         'billing_id' => 1,
         'payment_date' => fake()->dateTimeBetween($startdate='-2 months', $enddate= 'now'),
+        'payment_method' => "Cash",
         'receipt_proof_imgUrl'=> fake()->imageUrl(),
         ];
     }

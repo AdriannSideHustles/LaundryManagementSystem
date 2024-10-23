@@ -10,9 +10,15 @@ class Billing extends Model
     use HasFactory;
     protected $table = 'billings';
     protected $fillable = [
-        'customer_user_id',
         'booking_id',
         'billing_datetime',
-        'amount',
     ];
+    protected $casts = [
+        'billing_datetime' => 'datetime',
+    ];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id');
+    }
 }

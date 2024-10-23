@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('billing_id')->constrained('billings');
             $table->dateTime('payment_date');
-            $table->string('receipt_proof_imgUrl');
+            $table->string('payment_method');
+            $table->string('receipt_proof_imgUrl')->nullable();
             $table->timestamps();
         });
     }

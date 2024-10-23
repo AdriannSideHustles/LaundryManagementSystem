@@ -12,6 +12,16 @@ class Payment extends Model
     protected $fillable = [
         'billing_id',
         'payment_date',
+        'payment_method',
         'receipt_proof_imgUrl',
     ];
+
+    protected $casts = [
+        'payment_date' => 'datetime',
+    ];
+
+    public function billing()
+    {
+        return $this->belongsTo(Billing::class, 'billing_id');
+    }
 }

@@ -19,7 +19,6 @@ class BillingFactory extends Factory
         return [
             'booking_id' => 1,
             'billing_datetime' => fake()->dateTimeBetween($startdate='-2 months', $enddate= 'now'),
-            'amount' =>  fake() -> numberBetween(600,1000),
             ];
     }
 }

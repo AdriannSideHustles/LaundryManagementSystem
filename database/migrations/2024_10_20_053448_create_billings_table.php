@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('booking_id')->constrained('bookings');
             $table->dateTime('billing_datetime');
-            $table->double('amount');
             $table->timestamps();
         });
     }

@@ -25,15 +25,48 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Confirm Bookings
                 </a>
+                <a class="nav-link" href="{{route('adminPaymentApproval.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Payments Approval
+                </a>
             @endif
-            
+            @if(Auth::user()->role == 'Staff')
+            <div class="sb-sidenav-menu-heading">Summary</div>
+            <a class="nav-link" href="{{url('admin/dashboard')}}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                Dashboard
+            </a>
+            <div class="sb-sidenav-menu-heading">Transactions</div>
+            <a class="nav-link" href="{{ route('assignedBooking.index') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                Assigned Bookings
+            </a>
+            <a class="nav-link" href="{{ route('staffPaymentApproval.index') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                Payments Approval
+            </a>
+            @endif
             @if(Auth::user()->role == 'Customer')
+                <div class="sb-sidenav-menu-heading">Summary</div>
+                <a class="nav-link" href="{{url('admin/dashboard')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Dashboard
+                </a>
                 <div class="sb-sidenav-menu-heading">Transactions</div>
                 <a class="nav-link" href="{{ route('booking.index') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Booking Page
                 </a>
+                <a class="nav-link" href="{{ url('customer/booking/cancelledRejected') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Rejected/Cancelled
+                </a>
+                <a class="nav-link" href="{{ route('billing.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Billings/Payments
+                </a>
             @endif
+            
             <div class="sb-sidenav-menu-heading">Options</div>
             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>

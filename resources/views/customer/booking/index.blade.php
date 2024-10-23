@@ -15,6 +15,7 @@
                 <thead>
                     <tr>
                         <th>Service Booked</th>
+                        <th>Price</th>
                         <th>Booking Created Date</th>
                         <th>Scheduled Date</th>
                         <th>Status</th>
@@ -26,6 +27,7 @@
                 <tfoot>
                     <tr>
                         <th>Service Booked</th>
+                        <th>Price</th>
                         <th>Booking Created Date</th>
                         <th>Scheduled Date</th>
                         <th>Status</th>
@@ -38,18 +40,30 @@
                     @foreach($bookings as $booking)
                     <tr>
                         <td>{{ $booking->service->service_name }}</td>
+                        <td>{{ $booking->service->price }}</td>
                         <td>{{ $booking->booking_date->format('Y-m-d h:i A') }}</td>
                         <td>{{ $booking->booking_schedule->format('Y-m-d h:i A') }}</td>
                         <td>{{ $booking->transaction_status }}</td>
                         <td>{{ $booking->staff ? $booking->staff->name : 'N/A' }}</td>
                         <td>{{ $booking->pickup_schedule ? $booking->pickup_schedule->format('Y-m-d h:i A') : 'N/A' }}</td>
                         <td>
+                            @if($booking->transaction_status === 3)
+                            <button type="#" class="btn btn-secondary" disabled>Not Applicable</button>
+                            @else
                             <a href="javascript:void(0)" class="btn btn-primary edit-booking" data-id="{{ $booking->id }}">Edit</a>
-                            <form action="{{ route('booking.destroy', $booking->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this booking?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+                                @if ($booking->transaction_status === 1)
+                                <form action="{{ route('booking.destroy', $booking->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this booking?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                                @else
+                                <form action="{{ route('booking.cancel', $booking->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                    @csrf
+                                    <button type="submit" class="btn btn-warning">Cancel</button>
+                                </form>
+                                @endif
+                            @endif
                         </td>
                     </tr>
                     @endforeach
