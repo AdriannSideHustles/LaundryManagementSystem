@@ -14,6 +14,7 @@
                 <thead>
                     <tr>
                         <th>Booking Ref #</th>
+                        <th>Customer Name</th>
                         <th>Service Booked</th>
                         <th>Price</th>
                         <th>Booking Created Date</th>
@@ -25,6 +26,7 @@
                 <tfoot>
                     <tr>
                         <th>Booking Ref #</th>
+                        <th>Customer Name</th>
                         <th>Service Booked</th>
                         <th>Price</th>
                         <th>Booking Created Date</th>
@@ -37,6 +39,7 @@
                     @foreach($bookings as $booking)
                     <tr>
                         <td>{{ $booking->booking_refnbr }}</td>
+                        <td>{{ $booking->customer->name }}</td>
                         <td>{{ $booking->service->service_name }}</td>
                         <td>{{ $booking->service->price }}</td>
                         <td>{{ $booking->booking_date->format('Y-m-d h:i A') }}</td>

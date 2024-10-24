@@ -11,6 +11,7 @@ class Booking extends Model
     protected $table = 'bookings';
 
     protected $fillable = [
+        'booking_refnbr',
         'customer_user_id',
         'staff_user_id',
         'service_id',

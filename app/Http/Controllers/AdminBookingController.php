@@ -17,11 +17,15 @@ class AdminBookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with(['customer','service', 'staff'])->whereIn('transaction_status', [1, 2])->orderBy('created_at', 'desc')->get();
+        $bookings = Booking::with(['customer','service', 'staff'])->whereIn('transaction_status', ["Pending", "Confirmed/Assigned"])->orderBy('booking_schedule', 'asc')->get();
         $staffs = User::where('role', 'Staff')->orderBy('name', 'asc')->get();
         return view('admin.confirmBooking.index', compact('bookings', 'staffs'));
     }
-
+    public function rejectedCancelledIndex()
+    {
+        $bookings = Booking::with(['customer','service', 'staff'])->whereIn('transaction_status', ["Rejected", "Cancelled"])->orderBy('created_at', 'desc')->get();
+        return view('admin.confirmBooking.cancelledRejected', compact('bookings'));
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -80,7 +84,7 @@ class AdminBookingController extends Controller
         ]);
         $booking = Booking::find($id);
         $booking->update([
-            'transaction_status' => 2,
+            'transaction_status' => "Confirmed/Assigned",
             'staff_user_id' => $request->staff_user_id,
         ]);
 
@@ -109,7 +113,7 @@ class AdminBookingController extends Controller
     {
         $booking = Booking::find($id);
         $booking->update([
-            'transaction_status' => 8,
+            'transaction_status' => "Rejected",
         ]);
 
         return redirect()->route('confirmBooking.index');

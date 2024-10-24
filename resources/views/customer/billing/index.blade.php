@@ -13,6 +13,7 @@
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Service Booked</th>
                         <th>Amount Payable</th>
                         <th>Billing Date</th>
@@ -23,6 +24,7 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Service Booked</th>
                         <th>Amount Payable</th>
                         <th>Billing Date</th>
@@ -34,13 +36,14 @@
                 <tbody>
                     @foreach($billings as $billing)
                     <tr>
+                        <td>{{ $billing->booking->booking_refnbr }}</td>
                         <td>{{ $billing->booking->service->service_name }}</td>
                         <td>{{ $billing->booking->service->price }}</td>
                         <td>{{ $billing->billing_datetime }}</td>
                         <td>{{ $billing->booking->transaction_status }}</td>
                         <td>{{ $billing->booking->staff->name}}</td>                        
                         <td>
-                            @if($billing->booking->transaction_status === 4)
+                            @if($billing->booking->transaction_status === "Ready For Pickup/Payment")
                             <a href="javascript:void(0)" class="btn btn-primary pay-billing" data-id="{{ $billing->id }}">Pickup/Pay</a>                            
                             @else
                             <button type="#" class="btn btn-secondary" disabled>Not Applicable</button>                            

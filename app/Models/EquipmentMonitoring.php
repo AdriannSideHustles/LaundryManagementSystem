@@ -15,4 +15,16 @@ class EquipmentMonitoring extends Model
         'monitoring_date',
         'status',
     ];
+    protected $casts = [
+        'monitoring_date' => 'datetime',
+    ];
+
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'staff_user_id');
+    }
+    public function equipment()
+    {
+        return $this->belongsTo(Equipment::class, 'equipment_id');
+    }
 }

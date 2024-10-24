@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
+use App\Models\EquipmentMonitoring;
 use Illuminate\Http\Request;
 
 class EquipmentController extends Controller
@@ -41,10 +42,19 @@ class EquipmentController extends Controller
             'description' => 'required|max:100',
         ]);
 
-        Equipment::create([
+        $equipment = Equipment::create([
             'name' => $request->name,
             'description' => $request->description
         ]);
+
+        
+        // EquipmentMonitoring::create([
+        //     'staff_user_id' => 1,
+        //     // 'equipment_id' => $equipment->id,
+        //     'equipment_id' => 1,
+        //     'monitoring_date' => now()->subHours(7),
+        //     'status' => 1
+        // ]);
 
         return response()->json(['success' => 'Equipment added successfully.']);
     }

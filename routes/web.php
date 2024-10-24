@@ -7,6 +7,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StaffPaymentController;
@@ -44,8 +45,10 @@ Route::resource('equipment', EquipmentController::class)->middleware(['auth', 'v
 Route::resource('user', UserController::class)->middleware(['auth', 'verified', 'admin']);
 Route::resource('confirmBooking', AdminBookingController::class)->middleware(['auth', 'verified', 'admin']);
 Route::post('/confirmBooking/{id}', [AdminBookingController::class, 'reject'])->name('confirmBooking.reject');
-Route::resource('adminPaymentApproval', AdminPaymentController::class)->middleware(['auth', 'verified', 'admin']);
+// Route::resource('adminPaymentApproval', AdminPaymentController::class)->middleware(['auth', 'verified', 'admin']);
 Route::post('/rejectPayment/{id}', [AdminPaymentController::class, 'reject'])->name('adminPaymentApproval.reject');
+Route::get('admin/payment/completed', [AdminPaymentController::class, 'completedTransactions']);
+Route::get('admin/confirmBooking/cancelledRejected', [AdminBookingController::class, 'rejectedCancelledIndex']);
 
 
 
@@ -56,12 +59,15 @@ Route::post('/rejectBooking/{id}', [assignedBookingController::class, 'reject'])
 Route::post('/doneLaundry/{id}', [assignedBookingController::class, 'readyForPickup'])->name('assignedBooking.readyForPickup');
 Route::resource('staffPaymentApproval', StaffPaymentController::class)->middleware(['auth', 'verified', 'staff']);
 Route::post('/rejectPayment/{id}', [StaffPaymentController::class, 'reject'])->name('staffPaymentApproval.reject');
+Route::get('staff/payment/completed', [StaffPaymentController::class, 'completedTransactions']);
 
 
-Route::get('customer/dashboard',[HomeController::class,'customer']) -> middleware(['auth','verified','customer'])->name('customer.dashboard');
+Route::get('customer/dashboard',[HomeController::class,'customer']) -> middleware(['auth','verified','customer']);
 Route::resource('booking', BookingController::class)->middleware(['auth', 'verified', 'customer']);
 Route::get('customer/booking/cancelledRejected', [BookingController::class, 'rejectedCancelledIndex']);
 Route::post('/cancelBooking/{id}', [BookingController::class, 'cancel'])->name('booking.cancel');
 Route::resource('billing', BillingController::class)->middleware(['auth', 'verified', 'customer']);
+Route::resource('payment', PaymentController::class)->middleware(['auth', 'verified', 'customer']);
+
 
 require __DIR__.'/auth.php';

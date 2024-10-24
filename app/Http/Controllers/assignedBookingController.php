@@ -16,7 +16,7 @@ class assignedBookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with(['service', 'customer'])->where('staff_user_id', auth()->id())->whereIn('transaction_status', [2, 3])->orderBy('booking_schedule', 'asc')->get();
+        $bookings = Booking::with(['service', 'customer'])->where('staff_user_id', auth()->id())->whereIn('transaction_status', ["Confirmed/Assigned", "Received/In Process"])->orderBy('booking_schedule', 'asc')->get();
         return view('staff.assignedBooking.index', compact('bookings'));
     }
 
@@ -78,7 +78,7 @@ class assignedBookingController extends Controller
         ]);
         $booking = Booking::find($id);
         $booking->update([
-            'transaction_status' => 3,
+            'transaction_status' => "Received/In Process",
             'pickup_schedule' => $request->pickup_schedule,
         ]);
 
@@ -107,7 +107,7 @@ class assignedBookingController extends Controller
     {
         $booking = Booking::find($id);
         $booking->update([
-            'transaction_status' => 8,
+            'transaction_status' => "Rejected",
         ]);
 
         return redirect()->route('assignedBooking.index');
@@ -125,7 +125,7 @@ class assignedBookingController extends Controller
     {
         $booking = Booking::find($id);
         $booking->update([
-            'transaction_status' => 4,
+            'transaction_status' => "Ready For Pickup/Payment",
         ]);
 
         try {

@@ -14,9 +14,9 @@
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>Ref Nbr</th>
                         <th>Service Booked</th>
                         <th>Price</th>
-                        <th>Booking Created Date</th>
                         <th>Scheduled Date</th>
                         <th>Status</th>
                         <th>Staff Assigned</th>
@@ -26,9 +26,9 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Ref Nbr</th>
                         <th>Service Booked</th>
                         <th>Price</th>
-                        <th>Booking Created Date</th>
                         <th>Scheduled Date</th>
                         <th>Status</th>
                         <th>Staff Assigned</th>
@@ -39,19 +39,19 @@
                 <tbody>
                     @foreach($bookings as $booking)
                     <tr>
+                        <td>{{ $booking->booking_refnbr }}</td>
                         <td>{{ $booking->service->service_name }}</td>
                         <td>{{ $booking->service->price }}</td>
-                        <td>{{ $booking->booking_date->format('Y-m-d h:i A') }}</td>
                         <td>{{ $booking->booking_schedule->format('Y-m-d h:i A') }}</td>
                         <td>{{ $booking->transaction_status }}</td>
                         <td>{{ $booking->staff ? $booking->staff->name : 'N/A' }}</td>
                         <td>{{ $booking->pickup_schedule ? $booking->pickup_schedule->format('Y-m-d h:i A') : 'N/A' }}</td>
                         <td>
-                            @if($booking->transaction_status === 3)
+                            @if($booking->transaction_status === "Received/In Process")
                             <button type="#" class="btn btn-secondary" disabled>Not Applicable</button>
                             @else
                             <a href="javascript:void(0)" class="btn btn-primary edit-booking" data-id="{{ $booking->id }}">Edit</a>
-                                @if ($booking->transaction_status === 1)
+                                @if ($booking->transaction_status === "Pending")
                                 <form action="{{ route('booking.destroy', $booking->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this booking?');">
                                     @csrf
                                     @method('DELETE')

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('equipment_monitorings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('staff_user_id')->constrained('users');
+            $table->foreignId('staff_user_id')->constrained('users')->nullable();
             $table->foreignId('equipment_id')->constrained('equipments');
             $table->dateTime('monitoring_date');
             $table->integer('equipment_status');

@@ -12,6 +12,7 @@
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Customer Name</th>
                         <th>Service Booked</th>
                         <th>Booking Created Date</th>
@@ -23,6 +24,7 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Customer Name</th>
                         <th>Service Booked</th>
                         <th>Booking Created Date</th>
@@ -35,6 +37,7 @@
                 <tbody>
                     @foreach($bookings as $booking)
                     <tr>
+                        <td>{{ $booking->booking_refnbr }}</td>
                         <td>{{ $booking->customer ? $booking->customer->name : 'N/A' }}</td>
                         <td>{{ $booking->service->service_name }}</td>
                         <td>{{ $booking->booking_date->format('Y-m-d h:i A') }}</td>

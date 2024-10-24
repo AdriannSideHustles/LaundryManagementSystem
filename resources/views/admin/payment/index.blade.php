@@ -13,6 +13,7 @@
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Service Booked</th>
                         <th>Amount Payable</th>
                         <th>Billing Date</th>
@@ -25,6 +26,7 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Service Booked</th>
                         <th>Amount Payable</th>
                         <th>Billing Date</th>
@@ -38,6 +40,7 @@
                 <tbody>
                     @foreach($payments as $payment)
                     <tr>
+                        <td>{{ $payment->billing->booking->booking_refnbr }}</td>
                         <td>{{ $payment->billing->booking->service->service_name }}</td>
                         <td>{{ $payment->billing->booking->service->price }}</td>
                         <td>{{ $payment->billing->billing_datetime }}</td>

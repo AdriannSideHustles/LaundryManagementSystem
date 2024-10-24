@@ -1,4 +1,4 @@
-<x-guest-layout>
+{{-- <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -44,4 +44,33 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+</x-guest-layout> --}}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Log in Page</title>
+   @vite(['resources/css/register.css'])
+</head>
+<body>
+   
+<div class="form-container">
+   <form method="POST" action="{{ route('login') }}">
+    @csrf
+      <h3>Log in Now</h3>
+      <input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" required placeholder="Enter your Email">
+      <x-input-error :messages="$errors->get('email')" class="mt-2" />
+      <input id="password" type="password" name="password" required autocomplete="current-password" required placeholder="Enter your Password">
+      <x-input-error :messages="$errors->get('password')" class="mt-2" />
+      <input type="submit" name="submit" value=" {{ __('Log in') }}" class="form-btn">
+      <p>Don't have an Account? <a href="{{ route('register') }}">Register Now</a></p>
+   </form>
+</div>
+
+</body>
+</html>
+

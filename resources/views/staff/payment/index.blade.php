@@ -13,9 +13,9 @@
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Service Booked</th>
                         <th>Amount Payable</th>
-                        <th>Billing Date</th>
                         <th>Payment Date</th>
                         <th>Payment Method</th>
                         <th>Status</th>
@@ -25,9 +25,9 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Service Booked</th>
                         <th>Amount Payable</th>
-                        <th>Billing Date</th>
                         <th>Payment Date</th>
                         <th>Payment Method</th>
                         <th>Status</th>
@@ -38,23 +38,20 @@
                 <tbody>
                     @foreach($payments as $payment)
                     <tr>
+                        <td>{{ $payment->billing->booking->booking_refnbr }}</td>
                         <td>{{ $payment->billing->booking->service->service_name }}</td>
                         <td>{{ $payment->billing->booking->service->price }}</td>
-                        <td>{{ $payment->billing->billing_datetime }}</td>
                         <td>{{ $payment->payment_date}}</td>
                         <td>{{ $payment->payment_method}}</td>
                         <td>{{ $payment->billing->booking->transaction_status }}</td>
                         <td>{{ $payment->billing->booking->staff->name}}</td>                        
                         <td>
-                            @if($payment->payment_method === "Cash")
+                            
                             <a href="javascript:void(0)" class="btn btn-primary approve-payment" data-id="{{ $payment->id }}">Approve</a>                            
                             <form action="{{ route('staffPaymentApproval.reject', $payment->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Reject Payment?');">
                                 @csrf
                                 <button type="submit" class="btn btn-danger">Reject</button>
                             </form>
-                            @else
-                            <button type="#" class="btn btn-secondary" disabled>Not Applicable</button>                            
-                            @endif
                         </td>
                     </tr>
                     @endforeach

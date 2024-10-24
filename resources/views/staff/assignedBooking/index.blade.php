@@ -13,40 +13,40 @@
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Customer Name</th>
                         <th>Service Booked</th>
                         <th>Price</th>
-                        <th>Booking Created Date/Time</th>
                         <th>Scheduled Date/Time</th>
                         <th>Status</th>
-                        <th>Estimated Pickup Schedule</th>
+                        <th>Estimated Pickup Sched</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Booking Ref #</th>
                         <th>Customer Name</th>
                         <th>Service Booked</th>
                         <th>Price</th>
-                        <th>Booking Created Date/Time</th>
                         <th>Scheduled Date/Time</th>
                         <th>Status</th>
-                        <th>Estimated Pickup Schedule</th>
+                        <th>Estimated Pickup Sched</th>
                         <th>Action</th>
                     </tr>
                 </tfoot>
                 <tbody>
                     @foreach($bookings as $booking)
                     <tr>
+                        <td>{{ $booking->booking_refnbr }}</td>
                         <td>{{ $booking->customer->name }}</td>
                         <td>{{ $booking->service->service_name }}</td>
                         <td>{{ $booking->service->price }}</td>
-                        <td>{{ $booking->booking_date->format('Y-m-d h:i A') }}</td>
                         <td>{{ $booking->booking_schedule->format('Y-m-d h:i A') }}</td>
                         <td>{{ $booking->transaction_status }}</td>
                         <td>{{ $booking->pickup_schedule ? $booking->pickup_schedule->format('Y-m-d h:i A') : 'N/A' }}</td>
                         <td>
-                            @if($booking->transaction_status === 2)
+                            @if($booking->transaction_status === "Confirmed/Assigned")
                             <a href="javascript:void(0)" class="btn btn-primary receive-booking" data-id="{{ $booking->id }}">Received</a>
                             <form action="{{ route('assignedBooking.reject', $booking->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to Reject this booking?');">
                                 @csrf

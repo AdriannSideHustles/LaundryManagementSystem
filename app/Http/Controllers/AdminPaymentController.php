@@ -17,15 +17,24 @@ class AdminPaymentController extends Controller
     {
         $payments = Payment::with(['billing'])
             ->whereHas('billing.booking', function($query) {
-                $query->whereIn('transaction_status', [5]); 
+                $query->whereIn('transaction_status', ["For Payment Approval"]); 
             })
             ->orderBy('created_at', 'desc')
             ->get(); 
 
         return view('admin.payment.index', compact('payments'));
     }
+    public function completedTransactions()
+    {
+        $payments = Payment::with(['billing'])
+            ->whereHas('billing.booking', function($query) {
+                $query->whereIn('transaction_status', ["Complete"]); 
+            })
+            ->orderBy('created_at', 'desc')
+            ->get(); 
 
-
+        return view('admin.payment.completed', compact('payments'));
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -88,7 +97,7 @@ class AdminPaymentController extends Controller
     {
         $payment = Payment::find($id);
         $payment->billing->booking->update([
-            'transaction_status' => 6,
+            'transaction_status' => "Complete",
         ]);
 
         return redirect()->route('adminPaymentApproval.index');
@@ -116,7 +125,7 @@ class AdminPaymentController extends Controller
     {
         $payment = Payment::find($id);
         $payment->billing->booking->update([
-            'transaction_status' => 4,
+            'transaction_status' => "Ready For Pickup/Payment",
         ]);
         if ($payment->receipt_proof_imgUrl && Storage::disk('public')->exists($payment->receipt_proof_imgUrl)) {
             Storage::disk('public')->delete($payment->receipt_proof_imgUrl);

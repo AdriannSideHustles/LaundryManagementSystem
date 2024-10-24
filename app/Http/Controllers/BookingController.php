@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -15,7 +16,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->whereIn('transaction_status', [1,2,3])->orderBy('created_at', 'desc')->get();
+        $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->whereIn('transaction_status', ["Pending","Confirmed/Assigned","Received/In Process"])->orderBy('created_at', 'desc')->get();
         $services = Service::orderBy('service_name', 'asc')->get();
         return view('customer.booking.index', compact('bookings', 'services'));
     }
@@ -27,7 +28,7 @@ class BookingController extends Controller
      */
     public function rejectedCancelledIndex()
     {
-        $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->whereIn('transaction_status', [8, 9])->orderBy('created_at', 'desc')->get();
+        $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->whereIn('transaction_status', ["Rejected", "Cancelled"])->orderBy('created_at', 'desc')->get();
         return view('customer.booking.cancelledRejected', compact('bookings'));
     }
 
@@ -54,10 +55,11 @@ class BookingController extends Controller
             'booking_schedule' => 'required|date', 
         ]);
         Booking::create([
+            'booking_refnbr' => strtoupper(Str::random(3) . rand(10, 99)),
             'customer_user_id' => auth()->id(), 
             'staff_user_id' => null,
             'service_id' => $request->input('service_id'),
-            'transaction_status' => 1,
+            'transaction_status' => "Pending",
             'booking_date' => now()->subHours(7),
             'booking_schedule' => $request->input('booking_schedule'),
             'pickup_schedule' => null,
@@ -134,7 +136,7 @@ class BookingController extends Controller
     {
         $booking = Booking::find($id);
         $booking->update([
-            'transaction_status' => 9,
+            'transaction_status' => "Cancelled",
         ]);
 
         return redirect()->route('booking.index');
