@@ -20,7 +20,7 @@ class EquipmentMonitoringFactory extends Factory
             'staff_user_id' => 1,
             'equipment_id' => 1,
             'monitoring_date' => fake()->dateTimeBetween($startdate='-2 months', $enddate= 'now'),
-            'equipment_status' => 1,
+            'equipment_status' => "Working",
         ];
     }
 }

@@ -31,6 +31,10 @@ class BookingController extends Controller
         $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->whereIn('transaction_status', ["Rejected", "Cancelled"])->orderBy('created_at', 'desc')->get();
         return view('customer.booking.cancelledRejected', compact('bookings'));
     }
+    public function getAllBookings(){
+        $bookings = Booking::with(['service', 'staff'])->where('customer_user_id', auth()->id())->orderBy('created_at', 'desc')->get();
+        return view('customer.booking.trackBookings', compact('bookings'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -39,7 +43,8 @@ class BookingController extends Controller
      */
     public function create()
     {
-        //
+        $services = Service::orderBy('service_name', 'asc')->paginate(8);
+        return view('customer.booking.create',compact('services'));
     }
 
     /**
@@ -50,22 +55,24 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate booking schedule
         $request->validate([
-            'service_id' => 'required|exists:services,id',
-            'booking_schedule' => 'required|date', 
-        ]);
-        Booking::create([
-            'booking_refnbr' => strtoupper(Str::random(3) . rand(10, 99)),
-            'customer_user_id' => auth()->id(), 
-            'staff_user_id' => null,
-            'service_id' => $request->input('service_id'),
-            'transaction_status' => "Pending",
-            'booking_date' => now()->subHours(7),
-            'booking_schedule' => $request->input('booking_schedule'),
-            'pickup_schedule' => null,
+            'booking_schedule' => 'required|date',
         ]);
 
-        return response()->json(['success' => 'Booking added successfully.']);
+        // Create new booking
+        Booking::create([
+            'booking_refnbr' => strtoupper(Str::random(3) . rand(10, 99)), // Random booking reference
+            'customer_user_id' => auth()->id(), // Authenticated user ID
+            'staff_user_id' => null, // Initially null, can be assigned later
+            'service_id' => $request->input('service_id'), // Service ID passed from the form
+            'transaction_status' => 'Pending', // Default status is pending
+            'booking_date' => now()->subHours(7), // Adjusted booking date
+            'booking_schedule' => $request->input('booking_schedule'), // Schedule provided by user
+            'pickup_schedule' => null, // Pickup schedule can be set later
+        ]);
+
+        return redirect()->route('booking.index');
     }
 
     /**
@@ -87,7 +94,7 @@ class BookingController extends Controller
      */
     public function edit($id)
     {
-        $booking = Booking::find($id);
+        $booking = Booking::with('service')->find($id);
         return response()->json($booking);
     }
 

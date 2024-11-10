@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('staff_user_id')->constrained('users')->nullable();
             $table->foreignId('equipment_id')->constrained('equipments');
             $table->dateTime('monitoring_date');
-            $table->integer('equipment_status');
+            $table->string('equipment_status');
             $table->timestamps();
         });
     }

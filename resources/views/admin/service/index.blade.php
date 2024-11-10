@@ -14,6 +14,7 @@
             <table id="datatablesSimple">
                 <thead>
                     <tr>
+                        <th>Image</th>
                         <th>Service Name</th>
                         <th>Description</th>
                         <th>Price</th>
@@ -22,6 +23,7 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>Image</th>
                         <th>Service Name</th>
                         <th>Description</th>
                         <th>Price</th>
@@ -31,6 +33,11 @@
                 <tbody>
                     @foreach($services as $service)
                     <tr>
+                        @if($service->img_url != null)
+                            <td><img src="{{Vite::asset('storage/app/public/' . $service->img_url) }}" alt="Service Image"  width="100"></td>                        
+                        @else                        
+                            <td><img src="https://via.placeholder.com/150" alt="Service Image"  width="100"></td>                        
+                        @endif
                         <td>{{ $service -> service_name }}</td>
                         <td>{{ $service -> description }}</td>
                         <td>{{ $service -> price }}</td>
@@ -65,13 +72,13 @@
                     <div class="form-group">
                         <label for="service_name" class="col-sm-4 control-label">Name</label>
                         <div class="col-sm-12">
-                            <input type="text" class="form-control" id="service_name" name="service_name" placeholder="Enter Service Name" value="" maxlength="20" required="">
+                            <input type="text" class="form-control" id="service_name" name="service_name" placeholder="Enter Service Name" value="" maxlength="255" required="">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="description" class="col-sm-4 control-label">Description</label>
                         <div class="col-sm-12">
-                            <input type="text" class="form-control" id="description" name="description" placeholder="Enter Service Description" value="" maxlength="100" required="">
+                            <input type="text" class="form-control" id="description" name="description" placeholder="Enter Service Description" value="" maxlength="255" required="">
                         </div>
                     </div>
                     <div class="form-group">
@@ -80,6 +87,14 @@
                             <input type="number" step="0.01" class="form-control" id="price" name="price" placeholder="Enter Price" value=""  required="">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Upload Image</label>
+                        <div class="col-sm-12">
+                            <input id="image_url" type="file" name="image_url" accept="image/*" onchange="readURL(this);" >
+                            <input type="hidden" name="hidden_image" id="hidden_image" >
+                        </div>
+                    </div>
+                    <img id="modal-preview" src="https://via.placeholder.com/150" alt="Preview" class="form-group hidden" width="100" height="100" style="margin-top: 10px;">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="submit" class="btn btn-primary" id="btn-save" style="margin-top: 10px;"></button>
                     </div>
@@ -97,6 +112,7 @@
             $('#productForm').trigger("reset"); 
             $('#ajax-product-modal').modal('show'); 
             $('#productCrudModal').html("Add Service");
+            $('#modal-preview').attr('src', 'https://via.placeholder.com/150').addClass('hidden'); 
             $('#btn-save').text('Save Service'); 
             $('#method').val('POST'); 
             $('#productForm').attr('action', "{{ route('service.store') }}"); 
@@ -112,6 +128,13 @@
                 $('#service_name').val(data.service_name); 
                 $('#description').val(data.description); 
                 $('#price').val(data.price); 
+                if(data.img_url != null){
+                $('#hidden_image').val(data.img_url);
+                $('#modal-preview').attr('src', '{{ Vite::asset('storage/app/public/') }}' + data.img_url).removeClass('hidden'); 
+                }
+                else{
+                    $('#modal-preview').attr('src', 'https://via.placeholder.com/150').addClass('hidden');
+                }
                 $('#productForm').attr('action', "{{ route('service.update', '') }}/" + data.id); 
                 $('#btn-save').text('Update Service'); 
                 $('#ajax-product-modal').modal('show'); 
@@ -137,6 +160,21 @@
                     console.log(data);
                 }
             });
+        });
+
+        // Preview the selected image
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#modal-preview').attr('src', e.target.result).removeClass('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $('#image_url').change(function() {
+            readURL(this); 
         });
     });
 </script>

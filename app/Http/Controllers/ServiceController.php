@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -37,16 +38,25 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'service_name' => 'required|max:20',
+            'service_name' => 'required|max:50',
             'description' => 'required|max:100',
             'price' => 'required|numeric',
         ]);
 
-        Service::create([
-            'service_name' => $request->service_name,
-            'description' => $request->description,
-            'price' => $request->price,
-        ]);
+        $service = new Service();
+        $service->service_name = $request->input('service_name');
+        $service->description = $request->input('description');
+        $service->price = $request->input('price');
+
+        if ($request->hasFile('image_url')) {
+            $image_url = $request->file('image_url');
+            $imageName = time() . '_' . uniqid() . '.' . $image_url->getClientOriginalExtension();
+            
+            $imagePath = $image_url->storeAs('services', $imageName, 'public');
+            $service->img_url = $imagePath;
+        }
+
+        $service->save();
 
         return response()->json(['success' => 'Service added successfully.']);
     }
@@ -85,17 +95,30 @@ class ServiceController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'service_name' => 'required|max:20',
+            'service_name' => 'required|max:50',
             'description' => 'required|max:100',
             'price' => 'required|numeric',
         ]);
 
         $service = Service::find($id);
-        $service->update([
-            'service_name' => $request->service_name,
-            'description' => $request->description,
-            'price' => $request->price,
-        ]);
+
+        $service->service_name = $request->service_name;
+        $service->description = $request->description;
+        $service->price = $request->price;
+
+        if ($request->hasFile('image_url')) {
+            // Store the new image
+            $path = $request->file('image_url')->store('services', 'public');
+    
+            // Delete the old image if it exists
+            if ($service->img_url && Storage::disk('public')->exists($service->img_url)) {
+                Storage::disk('public')->delete($service->img_url);
+            }
+    
+            // Update the image_url with the new path
+            $service->img_url = $path;
+        }
+        $service->save();
 
         return response()->json(['success' => 'Service updated successfully.']);
     }
@@ -107,6 +130,11 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
+
+        if ($service->img_url && Storage::disk('public')->exists($service->img_url)) {
+            Storage::disk('public')->delete($service->img_url);
+        }
+    
         $service->delete();
         return redirect()->route('service.index')->with('success', 'Service deleted successfully!');
     }

@@ -37,7 +37,7 @@
                         <a class="nav-link" href="#services">Services</a>
                     </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#portfolio">Our Device</a>
+                        <a class="nav-link" href="#portfolio">Our Equipments</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#reviews">Reviews</a>
@@ -88,7 +88,7 @@
             </div>
             <div class="row justify-content-between align-items-center">
                 <div class="col-lg-6" data-aos="fade-down" data-aos-delay="50">
-                    <img src="{{ Vite::asset('resources/img/AboutUs.png')}}" style="margin-left: 100px"  alt="">
+                    <img src="{{ Vite::asset('resources/img/AboutUs.png')}}" class="about-us-img"  alt="">
                 </div>
                 <div data-aos="fade-down" data-aos-delay="150" class="col-lg-5">
                     <h1>About Swirl & Twist</h1>
@@ -436,24 +436,19 @@
             </div>
             <div class="row g-4 text-center">
                 <div class="col-md-6" data-aos="fade-down" data-aos-delay="150">
-                    <div class="team-member image-zoom">
-                        <div class="image-zoom-wrapper">
-                            <img src="{{ Vite::asset('resources/img/wali.png')}}" alt="" width="380">
-                        </div>
+                    <div class="team-member">
+                        
                         <div class="team-member-content">
                             <h4 class="text-white">Alwali Sangcopan</h4>
-                            <p class="mb-0 text-white">CEO</p>
+                            <p class="mb-0 text-white">Proponent</p>
                         </div>
                     </div>
                 </div>                
                 <div class="col-md-6" data-aos="fade-down" data-aos-delay="350">
-                    <div class="team-member image-zoom">
-                        <div class="image-zoom-wrapper">
-                            <img src="{{ Vite::asset('resources/img/Francelyn.png')}}" alt="" width="500">
-                        </div>
+                    <div class="team-member">
                         <div class="team-member-content">
                             <h4 class="text-white">Francelyn Estorpe</h4>
-                            <p class="mb-0 text-white">Co-Founder</p>
+                            <p class="mb-0 text-white">Proponent</p>
                         </div>
                     </div>
                 </div>

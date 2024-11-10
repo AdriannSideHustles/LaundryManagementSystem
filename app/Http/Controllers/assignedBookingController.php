@@ -20,6 +20,12 @@ class assignedBookingController extends Controller
         return view('staff.assignedBooking.index', compact('bookings'));
     }
 
+    
+    public function getAllBookings()
+    {
+        $bookings = Booking::with(['service', 'customer'])->where('staff_user_id', auth()->id())->orderBy('booking_schedule', 'asc')->get();
+        return view('staff.assignedBooking.trackBookings', compact('bookings'));
+    }
     /**
      * Show the form for creating a new resource.
      *

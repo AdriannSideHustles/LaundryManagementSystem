@@ -19,6 +19,7 @@ class EquipmentFactory extends Factory
         return [
             'name' => fake() -> word(2),
             'description' => fake() -> sentence(1),
+            'img_url'=> null,
         ];
     }
 }

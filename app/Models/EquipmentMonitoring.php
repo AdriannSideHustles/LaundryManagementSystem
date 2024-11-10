@@ -13,7 +13,7 @@ class EquipmentMonitoring extends Model
         'staff_user_id',
         'equipment_id',
         'monitoring_date',
-        'status',
+        'equipment_status',
     ];
     protected $casts = [
         'monitoring_date' => 'datetime',

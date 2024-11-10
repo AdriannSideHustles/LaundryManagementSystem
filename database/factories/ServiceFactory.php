@@ -20,6 +20,7 @@ class ServiceFactory extends Factory
             'service_name' => fake() -> word(2),
             'description' => fake() -> sentence(1),
             'price' => fake() -> numberBetween(200,500),
+            'img_url'=> null,
         ];
     }
 }

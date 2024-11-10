@@ -7,6 +7,10 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Dashboard
                 </a>
+                <a class="nav-link" href="{{url('admin/staffRecords/index')}}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Staff Records
+                </a>
                 <div class="sb-sidenav-menu-heading">Profiles</div>
                 <a class="nav-link" href="{{ route('service.index') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -25,10 +29,6 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Confirm Bookings
                 </a>
-                {{-- <a class="nav-link" href="{{route('adminPaymentApproval.index') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    Payments Approval
-                </a> --}}
                 <a class="nav-link" href="{{ url('admin/payment/completed') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Completed Transactions
@@ -36,6 +36,10 @@
                 <a class="nav-link" href="{{ url('admin/confirmBooking/cancelledRejected') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Rejected/Cancelled
+                </a>
+                <a class="nav-link" href="{{ url('admin/confirmBooking/trackBookings') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Track Bookings
                 </a>
             @endif
             @if(Auth::user()->role == 'Staff')
@@ -56,6 +60,15 @@
             <a class="nav-link" href="{{ url('staff/payment/completed') }}">
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                 Completed Transactions
+            </a>
+            <a class="nav-link" href="{{ url('staff/assignedBooking/trackBookings') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                Track Bookings
+            </a>
+            <div class="sb-sidenav-menu-heading">Equipments</div>
+            <a class="nav-link" href="{{ route('equipmentMonitoring.index') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                Monitor Equipments
             </a>
             @endif
             @if(Auth::user()->role == 'Customer')
@@ -80,6 +93,10 @@
                 <a class="nav-link" href="{{ route('payment.index') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Completed Transactions
+                </a>
+                <a class="nav-link" href="{{ url('customer/booking/trackBookings') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Track Bookings
                 </a>
             @endif   
         </div>

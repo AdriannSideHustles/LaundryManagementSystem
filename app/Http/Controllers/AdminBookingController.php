@@ -26,6 +26,11 @@ class AdminBookingController extends Controller
         $bookings = Booking::with(['customer','service', 'staff'])->whereIn('transaction_status', ["Rejected", "Cancelled"])->orderBy('created_at', 'desc')->get();
         return view('admin.confirmBooking.cancelledRejected', compact('bookings'));
     }
+    public function getAllBookings()
+    {
+        $bookings = Booking::with(['customer','service', 'staff'])->get();
+        return view('admin.confirmBooking.trackBookings', compact('bookings'));
+    }
     /**
      * Show the form for creating a new resource.
      *
